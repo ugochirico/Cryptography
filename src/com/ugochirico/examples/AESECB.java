@@ -23,7 +23,7 @@ public class AESECB {
 		
 		byte[] plaintext = "this is a plaintext string".getBytes();
 		
-		// ECB Encryption / Decrypion
+		// CBC Encryption / Decrypion
 		byte[] ciphertext = aes.encryptCBC(plaintext, 0, iv);
 
 		System.out.println(Encoder.bytesToHexString(ciphertext));
@@ -32,7 +32,7 @@ public class AESECB {
 		aes = new AESFast();			
 		aes.init(false, key128);
 				
-		// ECB Decryption
+		// CBC Decryption
 		byte[] plaintext1 = aes.decryptCBC(ciphertext, 0, iv);
 		
 		System.out.println(Encoder.bytesToHexString(plaintext1));		
