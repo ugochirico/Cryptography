@@ -16,17 +16,19 @@ import java.security.cert.X509Certificate;
 
 import org.bouncycastle.jce.provider.BouncyCastleProvider;
 
+import com.ugochirico.util.Encoder;
+
 public class Certificates {
 
 	public static void main(String arg[])
 	{
-		try {
+		try 
+		{
 			Security.addProvider(new BouncyCastleProvider());
-			CertificateFactory certFactory= CertificateFactory
-			  .getInstance("X.509");
+			
+			CertificateFactory certFactory = CertificateFactory.getInstance("X.509");
 			  
-			X509Certificate certificate = (X509Certificate) certFactory
-			  .generateCertificate(new FileInputStream("Baeldung.cer"));
+			X509Certificate certificate = (X509Certificate) certFactory.generateCertificate(new FileInputStream("Baeldung.cer"));
 			  
 			char[] keystorePassword = "password".toCharArray();
 			char[] keyPassword = "password".toCharArray();
@@ -34,15 +36,17 @@ public class Certificates {
 			KeyStore keystore = KeyStore.getInstance("PKCS12");
 			keystore.load(new FileInputStream("Baeldung.p12"), keystorePassword);
 			PrivateKey key = (PrivateKey) keystore.getKey("baeldung", keyPassword);
+			X509Certificate certificate1 = (X509Certificate)keystore.getCertificate("baeldung");
+			
+			System.out.println(Encoder.bytesToHexString(key.getEncoded()));
+			System.out.println(Encoder.bytesToHexString(certificate1.getEncoded()));			
+			
 		} catch (UnrecoverableKeyException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (CertificateException e) {
 			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (NoSuchProviderException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			e.printStackTrace();		
 		} catch (FileNotFoundException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
