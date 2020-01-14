@@ -1,6 +1,7 @@
 package com.ugochirico.examples;
 
 import com.ugochirico.crypt.AES.AESFast;
+import com.ugochirico.crypt.hash.SHA1;
 import com.ugochirico.util.Encoder;
 import com.ugochirico.util.Random;
 
@@ -14,17 +15,24 @@ public class AESECB {
 		Random r = new Random();		
 		r.nextBytes(key128);
 				
-		byte[] iv = new byte[aes.getBlockSize()];
-		
 		System.out.println(Encoder.bytesToHexString(key128));
-		System.out.println(Encoder.bytesToHexString(iv));
+		
+		String password = "password";
+		
+		SHA1 sha1 = new SHA1();
+		
+		byte[] key = sha1.getSHA1Hash(password.getBytes());
+		
+		System.arraycopy(key, 0, key128, 0, key128.length);
+		
+		System.out.println("derived key: " + Encoder.bytesToHexString(key));
 		
 		aes.init(true, key128);
 		
 		byte[] plaintext = "this is a plaintext string".getBytes();
 		
-		// CBC Encryption / Decrypion
-		byte[] ciphertext = aes.encryptCBC(plaintext, 0, iv);
+		// ECB Encryption / Decrypion
+		byte[] ciphertext = aes.encryptECB(plaintext, 0);
 
 		System.out.println(Encoder.bytesToHexString(ciphertext));
 		System.out.println(new String(ciphertext));
@@ -32,8 +40,8 @@ public class AESECB {
 		aes = new AESFast();			
 		aes.init(false, key128);
 				
-		// CBC Decryption
-		byte[] plaintext1 = aes.decryptCBC(ciphertext, 0, iv);
+		// ECB Decryption
+		byte[] plaintext1 = aes.decryptECB(ciphertext, 0);
 		
 		System.out.println(Encoder.bytesToHexString(plaintext1));		
 		System.out.println(new String(plaintext1));

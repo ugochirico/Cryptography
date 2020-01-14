@@ -14,14 +14,17 @@ public class AESCBC {
 		Random r = new Random();		
 		r.nextBytes(key128);
 				
+		byte[] iv = new byte[aes.getBlockSize()];
+		
 		System.out.println(Encoder.bytesToHexString(key128));
+		System.out.println(Encoder.bytesToHexString(iv));
 		
 		aes.init(true, key128);
 		
 		byte[] plaintext = "this is a plaintext string".getBytes();
 		
-		// ECB Encryption / Decrypion
-		byte[] ciphertext = aes.encryptECB(plaintext, 0);
+		// CBC Encryption / Decrypion
+		byte[] ciphertext = aes.encryptCBC(plaintext, 0, iv);
 
 		System.out.println(Encoder.bytesToHexString(ciphertext));
 		System.out.println(new String(ciphertext));
@@ -29,8 +32,8 @@ public class AESCBC {
 		aes = new AESFast();			
 		aes.init(false, key128);
 				
-		// ECB Decryption
-		byte[] plaintext1 = aes.decryptECB(ciphertext, 0);
+		// CBC Decryption
+		byte[] plaintext1 = aes.decryptCBC(ciphertext, 0, iv);
 		
 		System.out.println(Encoder.bytesToHexString(plaintext1));		
 		System.out.println(new String(plaintext1));
